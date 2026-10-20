@@ -61,5 +61,29 @@ fun DemoScreen(modifier: Modifier = Modifier) {
 }
 
 fun computeSum(epsilon: Double): String {
-    return "Заглушка"
+    var sum = 0.0
+    var k = 1                    // текущий нечётный факториал
+    var factorial = 1L           // k! (Long, чтобы не переполниться раньше)
+    var iterations = 0
+    var lastTerm = 0.0
+
+    do {
+        val term = 1.0 / factorial
+        lastTerm = term
+        if (kotlin.math.abs(term) < epsilon) break  // достигли точности
+
+        sum += term
+        iterations++
+
+        // переход к следующему нечётному факториалу
+        k += 2
+        factorial *= (k - 1) * k.toLong()
+    } while (factorial > 0)
+
+    return buildString {
+        appendLine("Сумма S = %.10f".format(sum))
+        appendLine("Последнее слагаемое = %.3e".format(lastTerm))
+        appendLine("Количество итераций = $iterations")
+        appendLine("(теоретически sinh(1) = 1.1752011936)")
+    }
 }
